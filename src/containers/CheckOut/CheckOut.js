@@ -1,37 +1,38 @@
 import React, {Component} from 'react';
 import {Route} from 'react-router-dom';
+import {connect} from 'react-redux';
 
 import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary';
 import ContactData from './ContactData/ContactData';
 
 class Checkout extends Component {
-    state = {
-        ingredients: null,
-        price: 0
-    };
+    // state = {
+    //     ingredients: null,
+    //     price: 0
+    // };
 
     // changed this from componentDidMount to allow for ingredients to be sent along with
     // 'null' initialized state
-    componentWillMount() {
-        const query = new URLSearchParams(this.props.location.search);
-        const ingredients = {};
-        let price = 0;
-        for (let param of query.entries()) {
-            // ['salad', '1']
-            // this loop adds ingredients to the empty dict above, so we need
-            // to build an if statement to account for the price that we passed along
-            // in the queryParams from BurgerBuilder.js
-            // the current method below though is a 'work around' and isn't the most efficient
-            if (param[0] === 'price') {
-                price = param[1]
-            } else {
-                ingredients[param[0]] = +param[1]
-            }
-        }
-        this.setState({ingredients: ingredients, totalPrice: price});
-        console.log(ingredients);
-        console.log(price)
-    }
+    // componentWillMount() {
+    //     const query = new URLSearchParams(this.props.location.search);
+    //     const ingredients = {};
+    //     let price = 0;
+    //     for (let param of query.entries()) {
+    //         // ['salad', '1']
+    //         // this loop adds ingredients to the empty dict above, so we need
+    //         // to build an if statement to account for the price that we passed along
+    //         // in the queryParams from BurgerBuilder.js
+    //         // the current method below though is a 'work around' and isn't the most efficient
+    //         if (param[0] === 'price') {
+    //             price = param[1]
+    //         } else {
+    //             ingredients[param[0]] = +param[1]
+    //         }
+    //     }
+    //     this.setState({ingredients: ingredients, totalPrice: price});
+    //     console.log(ingredients);
+    //     console.log(price)
+    // }
 
     checkoutCancelledHandler = () => {
         this.props.history.goBack();
@@ -45,7 +46,7 @@ class Checkout extends Component {
         return (
             <div>
                 <CheckoutSummary
-                    ingredients={this.state.ingredients}
+                    ingredients={this.props.ings}
                     checkoutCancelled={this.checkoutCancelledHandler}
                     checkoutContinued={this.checkoutContinuedHandler}/>
                 <Route
@@ -54,10 +55,19 @@ class Checkout extends Component {
                     // we are rendering it manually to pass props
                     // component={ContactData}
                     // passing along props to get history element
-                    render={(props) => <ContactData ingredients={this.state.ingredients} price={this.state.totalPrice} {...props}/>}/>
+                    component={ContactData}/>
             </div>
         )
     }
 }
 
-export default Checkout;
+const mapStateToProps = state => {
+    return {
+        ings: state.ingredients
+    }
+};
+
+// we don't need mapDispatchToProps because we are not dispatching anything
+// we do navigate via these props but we use React-Router for this
+
+export default connect(mapStateToProps)(Checkout);

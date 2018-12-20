@@ -13,13 +13,12 @@ import * as actionTypes from '../../store/actions';
 
 class BurgerBuilder extends Component {
     state = {
-        purchasable: false,
         purchasing: false,
         loading: false,
         error: false
     };
 
-    componentDidMount() {
+    // componentDidMount() {
         // we have access to 'match' elements here
         // console.log(props);
         // don't forget to add '.json' to end of url from Firebase
@@ -30,7 +29,7 @@ class BurgerBuilder extends Component {
         //     .catch(error => {
         //         this.setState({error: true})
         //     });
-    }
+    // }
 
     updatePurchaseState(ingredients) {
         const sum = Object.keys(ingredients)
@@ -40,7 +39,8 @@ class BurgerBuilder extends Component {
             .reduce((sum, el) => {
                 return sum + el;
             }, 0);
-        this.setState({purchasable: sum > 0});
+        // this.setState({purchasable: sum > 0});
+        return sum > 0;
     };
 
     // addIngredientHandler = (type) => {
@@ -115,17 +115,18 @@ class BurgerBuilder extends Component {
         // we commented out the above because we don't want to push to fireserve on this page
         // anymore. We instead want to go to a checkout page and push it from there.
         // We then copy/pasted it to ContactData.js and adjusted the code appropriately
-        const queryParams = [];
-        for (let i in this.state.ingredients) {
-            queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
-        }
-        // this line below was added after we copy/pasted the above code to ContactData.js
-        queryParams.push('price=' + this.state.totalPrice);
-        const queryString = queryParams.join('&');
-        this.props.history.push({
-            pathname: '/checkout',
-            search: '?' + queryString
-        });
+        // const queryParams = [];
+        // for (let i in this.state.ingredients) {
+        //     queryParams.push(encodeURIComponent(i) + '=' + encodeURIComponent(this.state.ingredients[i]));
+        // }
+        // // this line below was added after we copy/pasted the above code to ContactData.js
+        // queryParams.push('price=' + this.state.totalPrice);
+        // const queryString = queryParams.join('&');
+        // this.props.history.push({
+        //     pathname: '/checkout',
+        //     search: '?' + queryString
+        // });
+        this.props.history.push('/checkout');
     };
 
     render() {
@@ -146,7 +147,7 @@ class BurgerBuilder extends Component {
                         ingredientAdded={this.props.onIngredientAdded}
                         ingredientRemoved={this.props.onIngredientRemoved}
                         disabled={disabledInfo}
-                        purchasable={this.state.purchasable}
+                        purchasable={this.updatePurchaseState(this.props.ings)}
                         ordered={this.purchaseHandler}
                         price={this.props.price}/>
                 </Aux>
