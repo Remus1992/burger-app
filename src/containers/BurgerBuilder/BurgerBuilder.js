@@ -161,9 +161,9 @@ class BurgerBuilder extends Component {
                 ingredients={this.props.ings}
                 price={this.props.price}/>;
         }
-        if (this.state.loading) {
-            orderSummary = <Spinner/>
-        }
+        // if (this.state.loading) {
+        //     orderSummary = <Spinner/>
+        // }
 
         return (
             <Aux>
