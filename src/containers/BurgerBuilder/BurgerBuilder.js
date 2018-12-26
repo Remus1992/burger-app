@@ -21,10 +21,12 @@ class BurgerBuilder extends Component {
         error: false
     };
 
-    // componentDidMount() {
+    componentDidMount() {
         // we have access to 'match' elements here
-        // console.log(props);
+        console.log(props);
         // don't forget to add '.json' to end of url from Firebase
+        // the following has been removed from here and send to an action
+        // so instead we call it below via props
         // axios.get('https://react-my-burger-6f916.firebaseio.com/ingredients.json')
         //     .then(response => {
         //         this.setState({ingredients: response.data});
@@ -32,7 +34,8 @@ class BurgerBuilder extends Component {
         //     .catch(error => {
         //         this.setState({error: true})
         //     });
-    // }
+        this.props.onInitIngredients();
+    }
 
     updatePurchaseState(ingredients) {
         const sum = Object.keys(ingredients)
@@ -141,7 +144,7 @@ class BurgerBuilder extends Component {
             disabledInfo[key] = disabledInfo[key] <= 0
         }
         let orderSummary = null;
-        let burger = this.state.error ? <p>Ingredients can't be loaded</p> : <Spinner/>;
+        let burger = this.props.error ? <p>Ingredients can't be loaded</p> : <Spinner/>;
         if (this.props.ings) {
             burger = (
                 <Aux>
@@ -179,14 +182,16 @@ class BurgerBuilder extends Component {
 const mapStateToProps = state => {
   return {
       ings: state.ingredients,
-      price: state.totalPrice
+      price: state.totalPrice,
+      error: state.error
   }
 };
 
 const mapDispatchToProps = dispatch => {
     return {
         onIngredientAdded: (ingName) => dispatch(burgerBuilderActions.addIngredient(ingName)),
-        onIngredientRemoved: (ingName) => dispatch(burgerBuilderActions.removeIngredient(ingName))
+        onIngredientRemoved: (ingName) => dispatch(burgerBuilderActions.removeIngredient(ingName)),
+        onInitIngredients: () => dispatch(burgerBuilderActions.initIngredients())
     }
 };
 
