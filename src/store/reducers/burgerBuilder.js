@@ -38,8 +38,18 @@ const reducer = (state = initialState, action) => {
             };
         case actionTypes.SET_INGREDIENTS:
             return {
-                ...this.state,
-                ingredients: action.ingredients,
+                ...state,
+                // ingredients: action.ingredients,
+                // the above method will list ingredients in the order they are on
+                // firefox. A long fix would be to add a number to the ingredient
+                // and adjust on the front end.
+                // a short fix (but less flexible long term) is to hard code as below
+                ingredients: {
+                    salad: action.ingredients.salad,
+                    bacon: action.ingredients.bacon,
+                    cheese: action.ingredients.cheese,
+                    meat: action.ingredients.meat
+                },
                 error: false
             };
         case actionTypes.FETCH_INGREDIENTS_FAILED:

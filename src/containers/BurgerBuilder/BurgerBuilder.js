@@ -23,7 +23,7 @@ class BurgerBuilder extends Component {
 
     componentDidMount() {
         // we have access to 'match' elements here
-        console.log(props);
+        console.log(this.props);
         // don't forget to add '.json' to end of url from Firebase
         // the following has been removed from here and send to an action
         // so instead we call it below via props
