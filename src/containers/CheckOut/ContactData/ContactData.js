@@ -6,6 +6,8 @@ import Spinner from '../../../components/UI/Spinner/Spinner';
 import classes from './ContactData.css';
 import axios from '../../../axios-orders';
 import Input from '../../../components/UI/Input/Input';
+import withErrorHandler from '../../../HOC/withErrorHandler/withErrorHandler';
+import * as actions from '../../../store/actions/index';
 
 class ContactData extends Component {
     state = {
@@ -94,7 +96,7 @@ class ContactData extends Component {
             }
         },
         formIsValid: false,
-        loading: false
+        // loading: false
     };
 
     orderHandler = (event) => {
@@ -105,7 +107,7 @@ class ContactData extends Component {
         event.preventDefault();
         console.log(this.props.ingredients);
 
-        this.setState({loading: true});
+        // this.setState({loading: true});
         const formData = {};
         for (let formElementIdentifier in this.state.orderForm) {
             formData[formElementIdentifier] = this.state.orderForm[formElementIdentifier].value;
@@ -115,19 +117,22 @@ class ContactData extends Component {
             price: this.props.price,
             orderData: formData
         };
+        this.props.onOrderBurger(order);
+
         // '.json' is necessary for Firebase specifically
-        axios.post('/orders.json', order)
-            .then(response => {
-                this.setState({loading: false});
-                // we'd normally be able to do this but since
-                // we are manually rendering the component on CheckOut.js
-                // we can't access history, so we can use withRouter
-                // or we can pass along the props in the anonymous func from CheckOut.js
-                this.props.history.push('/');
-            })
-            .catch(error => {
-                this.setState({loading: false});
-            });
+        // this has now been moved to the "order action" file to allow for async code
+        // axios.post('/orders.json', order)
+        //     .then(response => {
+        //         this.setState({loading: false});
+        // we'd normally be able to do this but since
+        // we are manually rendering the component on CheckOut.js
+        // we can't access history, so we can use withRouter
+        // or we can pass along the props in the anonymous func from CheckOut.js
+        // this.props.history.push('/');
+        // })
+        // .catch(error => {
+        //     this.setState({loading: false});
+        // });
     };
 
     checkValidity(value, rules) {
@@ -212,7 +217,7 @@ class ContactData extends Component {
                 >ORDER</Button>
             </form>
         );
-        if (this.state.loading) {
+        if (this.props.loading) {
             form = <Spinner/>;
         }
         return (
@@ -227,8 +232,15 @@ class ContactData extends Component {
 const mapStateToProps = state => {
     return {
         ings: state.ingredients,
-        price: state.totalPrice
+        price: state.totalPrice,
+        loading: state.loading
     }
 };
 
-export default connect(mapStateToProps)(ContactData);
+const mapDispatchToProps = dispatch => {
+    return {
+        onOrderBurger: (orderData) => dispatch(actions.purchaseBurger(orderData))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(ContactData));
