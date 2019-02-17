@@ -118,21 +118,6 @@ class ContactData extends Component {
             orderData: formData
         };
         this.props.onOrderBurger(order);
-
-        // '.json' is necessary for Firebase specifically
-        // this has now been moved to the "order action" file to allow for async code
-        // axios.post('/orders.json', order)
-        //     .then(response => {
-        //         this.setState({loading: false});
-        // we'd normally be able to do this but since
-        // we are manually rendering the component on CheckOut.js
-        // we can't access history, so we can use withRouter
-        // or we can pass along the props in the anonymous func from CheckOut.js
-        // this.props.history.push('/');
-        // })
-        // .catch(error => {
-        //     this.setState({loading: false});
-        // });
     };
 
     checkValidity(value, rules) {
