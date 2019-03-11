@@ -5,9 +5,6 @@ import classes from './Burger.css';
 import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
 
 const burger = (props) => {
-    // only have ingredients here (not 'match') because Burger isn't loaded through
-    // routing. Only BurgerBuilder is
-    console.log(props);
     let transformedIngredients = Object.keys(props.ingredients)
         .map(igKey => {
             return [...Array(props.ingredients[igKey])].map((_, i) => {
@@ -17,7 +14,6 @@ const burger = (props) => {
         .reduce((arr, el) => {
             return arr.concat(el)
         }, []);
-    // console.log(transformedIngredients);
     if(transformedIngredients.length === 0) {
         transformedIngredients = <p>Please Start Adding Ingredients</p>
     }
@@ -30,5 +26,4 @@ const burger = (props) => {
     );
 };
 
-// this 'withRouter' will inject 'match' and other elements with Burger element
 export default withRouter(burger);
